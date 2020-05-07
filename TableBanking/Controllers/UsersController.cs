@@ -44,5 +44,58 @@ namespace TableBanking.Controllers
             return Ok(user);
         }
 
+        //Update User
+        [HttpPut]
+        public async Task<ActionResult> Update([FromBody]User user)
+        {
+            if (user == null)
+            {
+                return NotFound("User data is not supplied");                
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            User existingUser = _tbankContext.Users.FirstOrDefault(u => u.Id == user.Id);
+            if (existingUser == null)
+            {
+                return NotFound("User does not exist");
+            }
+
+            existingUser.Fisrtname = user.Fisrtname;
+            existingUser.Lastname = user.Lastname;
+            existingUser.Email = user.Email;
+            existingUser.Phone = user.Phone;
+            _tbankContext.Attach(existingUser).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            await _tbankContext.SaveChangesAsync();
+            return Ok(existingUser);
+        }
+
+        //Delete method
+        [HttpDelete]
+        public async Task<ActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound("Id is not supplied");
+            }
+            User user = _tbankContext.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound("No User found with that Id");
+            }
+
+            _tbankContext.Users.Remove(user);
+            await _tbankContext.SaveChangesAsync();
+            return Ok("User deleted successfully");
+        }
+
+        ~UsersController()
+        {
+            _tbankContext.Dispose();
+        }
+
     }
 }
