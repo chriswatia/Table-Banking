@@ -17,5 +17,12 @@ namespace TableBanking.Controllers
         {
             _tbankContext = context;
         }
+
+        //Get all Users
+        [HttpGet]
+        public ActionResult<IEnumerable<User>> Get()
+        {
+            return _tbankContext.Users.ToList();
+        }
     }
 }
