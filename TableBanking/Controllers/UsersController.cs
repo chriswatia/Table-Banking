@@ -44,6 +44,24 @@ namespace TableBanking.Controllers
             return Ok(user);
         }
 
+        //Get User by Id
+        [HttpGet]
+        [Route("getbyid/{id}")]
+        public ActionResult<User> GetById(int? id)
+        {
+            if (id <= 0)
+            {
+                return NotFound("User id must greater than zero");
+            }
+
+            User user = _tbankContext.Users.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound("No User found with that Id");
+            }
+
+            return Ok(user);
+        }
         //Update User
         [HttpPut]
         public async Task<ActionResult> Update([FromBody]User user)
