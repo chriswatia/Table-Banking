@@ -1,4 +1,4 @@
 #gitignore
-.vs
-TableBanking\bin
-TableBanking\obj
+.vs/
+TableBanking/bin/
+TableBanking/obj/
