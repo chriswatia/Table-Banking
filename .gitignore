@@ -1,4 +1,3 @@
-#gitignore
 .vs/
 TableBanking/bin/
 TableBanking/obj/
