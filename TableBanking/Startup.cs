@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using TableBanking.Models;
 
 namespace TableBanking
@@ -24,6 +25,23 @@ namespace TableBanking
             string connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<TBankContext>(opt => opt.UseSqlServer(connectionString));
 
+            //Add swagger Api
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "Table Banking REST API",
+                    Description = "List of Rest API",
+                    //TermsOfService = "None",
+                    Contact = new OpenApiContact()
+                    {
+                        Name = "Chris Watia",
+                        Email = "chriswatia@gmail.com",
+                    }
+                });
+            });
+
             services.AddControllers();
         }
 
@@ -40,6 +58,14 @@ namespace TableBanking
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseSwagger();
+            //Enable middleware to use swagger-ui
+            //Specifying the Swagger Json endpoint
+            app.UseSwaggerUI(opt =>
+            {
+                opt.SwaggerEndpoint("/swagger/v1/swagger.json", "Table Banking Rest API");
+            });
 
             app.UseEndpoints(endpoints =>
             {
